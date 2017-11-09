@@ -8,4 +8,8 @@ router.get('/:slug', Blog.getDataBySlug)
 
 router.post('/', Blog.saveData)
 
+router.put('/:slug', Blog.updateData)
+
+router.delete('/:slug', Blog.deleteData)
+
 module.exports = router

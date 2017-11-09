@@ -32,6 +32,26 @@ class Blog {
     })
   }
 
+  static updateData(req, res){
+    blog.updateBlog(req.headers, req.params, req.body, (result, auth) => {
+      if(result){
+        res.send(result)
+      }else{
+        res.send(auth)
+      }
+    })
+  }
+
+  static deleteData(req, res){
+    blog.deleteBlog(req.headers, req.params, (result, auth) => {
+      if(result){
+        res.send(result)
+      }else{
+        res.send(auth)
+      }
+    })
+  }
+
 }
 
 module.exports = Blog

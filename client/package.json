@@ -13,6 +13,7 @@
     "test": "npm run unit && npm run e2e"
   },
   "dependencies": {
+    "jsonwebtoken": "^8.1.0",
     "vee-validate": "^2.0.0-rc.21",
     "vue": "^2.5.2",
     "vue-resource": "^1.3.4",

@@ -1,9 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Navbar from '@/components/Navbar'
+import IndexPage from '@/components/IndexPage'
+import EditBlogPage from '@/components/EditBlog'
+import Blog from '@/components/Blog'
 import VeeValidate from 'vee-validate'
 import VueResource from 'vue-resource'
 import '@/assets/bootstrap/css/bootstrap.min.css'
+import '@/assets/bootstrap/css/style/style.css'
 import '@/assets/bootstrap/js/jquery.min.js'
 import '@/assets/bootstrap/js/bootstrap.min.js'
 
@@ -16,7 +19,17 @@ export default new Router({
     {
       path: '/',
       name: 'navbar',
-      component: Navbar
+      component: IndexPage
+    },
+    {
+      path: '/:slug',
+      name: 'edit_blog',
+      component: EditBlogPage
+    },
+    {
+      path: '/blog/:slug',
+      name: 'blog',
+      component: Blog
     }
   ]
 })

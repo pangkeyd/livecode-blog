@@ -9,17 +9,22 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">Brand</a>
+        <router-link class="navbar-brand" to="/">Brand</router-link>
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-          <li><a href="#">Link</a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
+        <ul v-if="!dataStorage[0]" class="nav navbar-nav navbar-right">
           <li><a href="#" data-toggle="modal" data-target="#login">Login</a></li>
           <li><a href="#" data-toggle="modal" data-target="#register">Register</a></li>
+        </ul>
+        <ul v-if="dataStorage[0]" v-for="dts in dataStorage" class="nav navbar-nav navbar-right">
+          <li>
+            <p>
+              Welcome, <span v-if="dts">{{ dts.username }}</span>,
+              <a href="#" @click="logout">Logout</a>
+            </p>
+          </li>
         </ul>
       </div><!-- /.navbar-collapse -->
 
@@ -98,6 +103,7 @@
 
 <script>
   import { Validator } from 'vee-validate'
+  import JWT from 'jsonwebtoken'
 
   export default{
     data() {
@@ -110,13 +116,39 @@
         formLogin: {
           user: '',
           pass: ''
-        }
+        },
+        dataStorage: []
       }
     },
+    mounted: function(){
+      this.getStorage()
+    },
     methods: {
+      logout: function(){
+        localStorage.clear()
+        this.dataStorage.length = 0
+        this.$router.go(this.$router.currentRoute)
+      },
+      getStorage: function(){
+        let decoded = JWT.decode(localStorage.qwerty)
+        this.dataStorage.push(decoded)
+      },
       submitLogin: function(e){
         e.preventDefault()
-        // this.$
+        this.$validator.validateAll({
+          user: this.formLogin.user,
+          pass: this.formLogin.pass
+        })
+        if(!this.errors.any()){
+          this.$http.post('http://localhost:3123/signin', this.formLogin)
+          .then(({body}) => {
+            localStorage.setItem('qwerty', body)
+            alert('Sukses Login!')
+            setInterval(() => {
+              this.$router.go(this.$router.currentRoute)
+            }, 300)
+          })
+        }
       },
       submitRegister: function(e){
         e.preventDefault()
@@ -222,5 +254,15 @@
   span.help.is-danger {
     color: red;
     font-size: 13px;
+  }
+
+  .index_page p {
+    color: white;
+    margin-bottom: 0;
+    margin-top: 13px;
+  }
+
+  .index_page span {
+    font-weight: bold
   }
 </style>

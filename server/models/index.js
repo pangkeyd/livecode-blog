@@ -92,10 +92,56 @@ function saveBlog(head, body, cb){
   })
 }
 
+function updateBlog(head, params, body, cb){
+  let token = head.token
+  let decoded = jwt.verify(token, 'secret key', (err, decoded) => {
+    if(decoded){
+      Blog.update({
+        slug: params.slug
+      }, {
+        $set: {
+          title: body.title,
+          content: body.content,
+          category: body.category
+        }
+      }, (err, blog) => {
+        if(!err){
+          cb(blog, null)
+        }else{
+          res.status(200).send(err)
+        }
+      })
+    }else{
+      let login = 'Login Dulu!'
+      cb(null, login)
+    }
+  })
+}
+
+function deleteBlog(head, params, cb){
+  let token = head.token
+  let decoded = jwt.verify(token, 'secret key', (err, decoded) => {
+    if(decoded){
+      Blog.remove({
+        slug: params.slug
+      }, (err) => {
+        if(!err){
+          let successDelete = 'Berhasil di Delete!'
+          cb(successDelete, null)
+        }else{
+          let failedDelete = 'Tidak berhasil di Delete!'
+          cb(null, failedDelete)
+        }
+      })
+    }
+  })
+}
 
 
 module.exports = {
   getData,
   getBlogBySlug,
-  saveBlog
+  saveBlog,
+  updateBlog,
+  deleteBlog
 }
